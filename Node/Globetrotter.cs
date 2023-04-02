@@ -13,6 +13,14 @@ namespace Node
 {
     public static class Globetrotter
     {
+        [FunctionName("negotiate")]
+        public static SignalRConnectionInfo Negotiate(
+            [HttpTrigger(AuthorizationLevel.Anonymous)]HttpRequest req,
+            [SignalRConnectionInfo(HubName = "hops")]SignalRConnectionInfo connectionInfo)
+        {
+            return connectionInfo;
+        }
+        
         [FunctionName("Globetrotter")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,

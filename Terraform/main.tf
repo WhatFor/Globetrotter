@@ -27,9 +27,9 @@ module "node-southafrica" {
   azure_region             = "southafricanorth"
   signalR_connectionString = module.host.signalR_connectionString
   max_hop_count            = 10
-  delay_ms                 = 2000
+  delay_ms                 = 0
   # This node is the first to be deployed, and does not have a next node yet
-  next_node_address = "https://gl-node-india-func.azurewebsites.net"
+  next_node_address = "https://gl-node-india-func.azurewebsites.net/api/Globetrotter"
 }
 
 # Create the India Node
@@ -39,7 +39,7 @@ module "node-india" {
   azure_region             = "centralindia"
   signalR_connectionString = module.host.signalR_connectionString
   max_hop_count            = 10
-  delay_ms                 = 2000
+  delay_ms                 = 0
   next_node_address        = module.node-southafrica.node_function_url
 }
 

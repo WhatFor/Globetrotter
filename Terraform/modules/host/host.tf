@@ -6,18 +6,18 @@ resource "azurerm_resource_group" "globe-host-rg" {
   location = var.azure_region
 }
 
-resource "azurerm_signalr_service" "globe-host-signalr" {
+resource "azurerm_signalr_service" "example" {
   name                = "globe-host-signalr"
   location            = azurerm_resource_group.globe-host-rg.location
   resource_group_name = azurerm_resource_group.globe-host-rg.name
-  service_mode        = "Default"
+  service_mode        = "Serverless"
   sku {
     name     = "Free_F1"
     capacity = 1
   }
-  # cors {
-  #   allowed_origins = ["http://www.example.com"] # todo
-  # }
+  cors {
+    allowed_origins = ["*"]
+  }
 }
 
 output "signalR_connectionString" {
