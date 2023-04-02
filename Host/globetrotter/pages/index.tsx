@@ -4,6 +4,7 @@ import { useSignalR } from "~/context/useSignalR";
 interface HopMessage {
   Node: string;
   Time: string;
+  HopCount: number;
 }
 
 const GetLocationUrl = (location: string) =>
@@ -54,6 +55,9 @@ export default function Home() {
         {messages.map((message, index) => {
           return (
             <div key={index}>
+              <div className="font-bold text-red-800">
+                Hop #{message.HopCount}
+              </div>
               <div>{message.Node}</div>
               <div>{message.Time}</div>
             </div>

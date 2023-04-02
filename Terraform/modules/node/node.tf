@@ -96,7 +96,7 @@ resource "azurerm_linux_function_app" "globe-node-func" {
     app_scale_limit = 1
     cors {
       support_credentials = true
-      allowed_origins     = ["http://localhost:3000"]
+      allowed_origins     = ["http://localhost:3000", "https://globetrotter-kappa.vercel.app"]
     }
     application_stack {
       dotnet_version = "6.0"

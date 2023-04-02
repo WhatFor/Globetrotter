@@ -30,7 +30,7 @@ namespace Node
             var nextAddr = Environment.GetEnvironmentVariable("NextNodeAddress");
             var selfIdentifier = Environment.GetEnvironmentVariable("SelfIdentifier");
             
-            var hopCount = req.Query.ContainsKey("hop_count") ? int.Parse(req.Query["hop_count"].FirstOrDefault() ?? "0") : 0;
+            var hopCount = req.Query.ContainsKey("hop_count") ? int.Parse(req.Query["hop_count"].FirstOrDefault() ?? "1") : 1;
             
             var maxHopCount = Environment.GetEnvironmentVariable("MaxHopCount");
             var maxHopCountInt = maxHopCount != null ? int.Parse(maxHopCount) : 10;
@@ -54,13 +54,14 @@ namespace Node
                         {
                             Node = selfIdentifier,
                             Time = DateTime.UtcNow,
+                            HopCount = hopCount,
                         }
                     }
                 });
             
             log.LogInformation($"Called host from node '{selfIdentifier}'.");
             
-            if (hopCount > maxHopCountInt)
+            if (hopCount >= maxHopCountInt)
             {
                 log.LogInformation($"Stopping execution of {nameof(Globetrotter)}. Node '{selfIdentifier}'. Hit max hop count.");
                 return new OkResult();
