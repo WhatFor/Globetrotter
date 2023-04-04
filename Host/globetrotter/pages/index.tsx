@@ -96,7 +96,7 @@ export default function Home() {
 
       setTimeout(() => {
         setTotalTime(undefined);
-      }, 3000);
+      }, 5000);
     }
   }, [messages]);
 
@@ -180,7 +180,12 @@ export default function Home() {
           </ComposableMap>
           {totalTime && (
             <div className="absolute bottom-10 left-1/3 bg-gray-800 text-white p-2 rounded-lg">
-              <p className="text-xl">Total time: {totalTime} milliseconds</p>
+            <p className="flex space-x-3 text-xl">
+                <span className="mt-0.5">Total time:</span>
+                <span className="text-green-500 text-2xl">
+                  {totalTime.toLocaleString()} milliseconds
+                </span>
+              </p>
             </div>
           )}
         </div>
