@@ -84,7 +84,7 @@ export default function Home() {
     <div className="flex h-full m-3 space-x-3">
       <div className="flex flex-col border border-gray-600 justify-between w-64 px-3 py-3 right-3 top-3 bottom-3 bg-gray-800 shadow-lg rounded-lg text-white space-y-5">
         <div className="flex flex-col h-full space-y-4">
-          <div className="flex h-full flex-col justify-between">
+          <div className="flex h-full flex-col">
             <div className="flex flex-col space-y-3 text-gray-200">
               <h1 className="text-2xl font-bold">Globetrotter</h1>
               <p className="text-sm italic">
@@ -124,7 +124,7 @@ export default function Home() {
               <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
             <button
-              className="bg-green-300 text-gray-600 font-bold hover:bg-green-400 transition rounded-lg px-12 py-2 w-full"
+              className="bg-green-300 text-gray-600 font-bold mt-10 hover:bg-green-400 transition rounded-lg px-12 py-2 w-full"
               onClick={() => fetch(GetLocationUrl())}
             >
               Start
@@ -132,7 +132,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col space-y-3 w-full">
+      <div className="flex flex-col space-y-3 w-full max-w-7xl">
         <div className="relative w-full">
           <ComposableMap>
             <Geographies geography={geoUrl}>
