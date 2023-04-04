@@ -8,6 +8,7 @@ import {
   Geography,
   Marker,
 } from "react-simple-maps";
+import { HubConnectionState } from "@microsoft/signalr";
 
 const geoUrl =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
@@ -72,6 +73,7 @@ export default function Home() {
   const [messages, setMessages] = useState<HopMessage[]>([]);
   const [totalTime, setTotalTime] = useState<number>();
   const signalRConnection = useSignalR();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (signalRConnection.connection) {
@@ -99,6 +101,10 @@ export default function Home() {
       }, 5000);
     }
   }, [messages]);
+
+  useEffect(() => {
+    setReady(signalRConnection.connected);
+  }, [signalRConnection.connected]);
 
   return (
     <div className="flex h-full m-3 space-x-3">
@@ -147,12 +153,21 @@ export default function Home() {
               </p>
               <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
-            <button
-              className="bg-green-300 text-gray-600 font-bold mt-10 hover:bg-green-400 transition rounded-lg px-12 py-2 w-full"
-              onClick={() => fetch(GetLocationUrl())}
-            >
-              Start
-            </button>
+            {ready ? (
+              <button
+                className="bg-green-300 text-gray-600 font-bold mt-10 hover:bg-green-400 transition rounded-lg px-12 py-2 w-full"
+                onClick={() => fetch(GetLocationUrl())}
+              >
+                Start
+              </button>
+            ) : (
+              <button
+                className="bg-gray-300 text-gray-600 font-bold mt-10 hover:bg-gray-400 transition rounded-lg px-12 py-2 w-full opacity-50"
+                disabled
+              >
+                Connecting...
+              </button>
+            )}
           </div>
         </div>
       </div>

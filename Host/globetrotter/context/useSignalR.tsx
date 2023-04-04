@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 interface Props {
@@ -8,12 +8,18 @@ interface Props {
 
 interface SignalRContextProps {
   connection: HubConnection | null;
+  connected: boolean;
 }
 
-const signalRContext = createContext<SignalRContextProps>({ connection: null });
+const signalRContext = createContext<SignalRContextProps>({
+  connection: null,
+  connected: false,
+});
 const useSignalR = () => useContext(signalRContext);
 
 const SignalRContextProvider = ({ children }: Props) => {
+  const [connected, setConnected] = useState(false);
+
   const connection = new HubConnectionBuilder()
     .withUrl(`${process.env.NEXT_PUBLIC_SIGNALR_ADDRESS}`)
     .withAutomaticReconnect()
@@ -22,6 +28,7 @@ const SignalRContextProvider = ({ children }: Props) => {
   const start = async () => {
     try {
       await connection.start();
+      setConnected(true);
       console.log("SignalR Connected.");
     } catch (err) {
       console.log(err);
@@ -30,6 +37,7 @@ const SignalRContextProvider = ({ children }: Props) => {
   };
 
   connection.onclose(async () => {
+    setConnected(false);
     await start();
   });
 
@@ -38,7 +46,7 @@ const SignalRContextProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <signalRContext.Provider value={{ connection }}>
+    <signalRContext.Provider value={{ connection, connected }}>
       {children}
     </signalRContext.Provider>
   );
