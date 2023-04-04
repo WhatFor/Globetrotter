@@ -141,15 +141,15 @@ export default function Home() {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill="#333333"
-                    stroke="#666666"
+                    fill="#343434"
+                    stroke="#555"
                   />
                 ))
               }
             </Geographies>
             {latestMessage && (
               <Marker coordinates={GetNodeLocation(latestMessage)}>
-                <circle r={6} fill="#339" stroke="#66e" strokeWidth={1} />
+                <circle r={5} fill="#4ade80" strokeWidth={0} />
                 <text
                   textAnchor="middle"
                   y={0}
