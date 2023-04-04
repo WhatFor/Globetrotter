@@ -76,6 +76,12 @@ export default function Home() {
     if (signalRConnection.connection) {
       signalRConnection.connection.on("newMessage", (message) => {
         setLatestMessage(message);
+
+        if (message.HopCount === 10) {
+          setTimeout(() => {
+            setLatestMessage(undefined);
+          }, 1000);
+        }
       });
     }
   }, []);
@@ -149,12 +155,8 @@ export default function Home() {
             </Geographies>
             {latestMessage && (
               <Marker coordinates={GetNodeLocation(latestMessage)}>
-                <circle r={5} fill="#4ade80" strokeWidth={0} />
-                <text
-                  textAnchor="middle"
-                  y={0}
-                  style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
-                ></text>
+                <circle r="5" className="ping-1"></circle>
+                <circle r="5" className="ping-2"></circle>
               </Marker>
             )}
           </ComposableMap>
