@@ -40,3 +40,7 @@ body {
   animation-delay: 300ms;
   animation-iteration-count: 1;
 }
+
+.rsm-geography {
+  @apply focus:outline-none;
+}

@@ -160,7 +160,7 @@ export default function Home() {
                   coordinates={GetNodeLocation(message)}
                 >
                   <circle r="5" className="ping-1"></circle>
-                  <circle r="5" className="ping-2"></circle>
+                  <circle r="4" className="ping-2"></circle>
                 </Marker>
               ))}
           </ComposableMap>
