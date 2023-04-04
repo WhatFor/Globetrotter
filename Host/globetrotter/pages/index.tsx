@@ -141,6 +141,10 @@ export default function Home() {
                 What you&apos;re seeing here is almost real-time data as the
                 traffic navigates the globe.
               </p>
+              <p className="text-sm italic">
+                Note: It&apos;s worth saying all resources in Azure are on the
+                free or cheapest tier and so warmup can take some time.
+              </p>
               <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
             <button
@@ -180,7 +184,7 @@ export default function Home() {
           </ComposableMap>
           {totalTime && (
             <div className="absolute bottom-10 left-1/3 bg-gray-800 text-white p-2 rounded-lg">
-            <p className="flex space-x-3 text-xl">
+              <p className="flex space-x-3 text-xl">
                 <span className="mt-0.5">Total time:</span>
                 <span className="text-green-500 text-2xl">
                   {totalTime.toLocaleString()} milliseconds
