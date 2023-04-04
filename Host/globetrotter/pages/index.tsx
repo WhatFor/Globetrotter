@@ -70,21 +70,35 @@ const Locations = [
 
 export default function Home() {
   const [messages, setMessages] = useState<HopMessage[]>([]);
+  const [totalTime, setTotalTime] = useState<number>();
   const signalRConnection = useSignalR();
 
   useEffect(() => {
     if (signalRConnection.connection) {
       signalRConnection.connection.on("newMessage", (message) => {
         setMessages((m) => [...m, message]);
-
-        if (message.HopCount === 10) {
-          setTimeout(() => {
-            setMessages([]);
-          }, 1000);
-        }
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (messages.length === 10) {
+      const firstMessage = messages[0];
+      const lastMessage = messages[messages.length - 1];
+      const totalTime =
+        new Date(lastMessage.Time).getTime() -
+        new Date(firstMessage.Time).getTime();
+      setTotalTime(totalTime);
+
+      setTimeout(() => {
+        setMessages([]);
+      }, 1000);
+
+      setTimeout(() => {
+        setTotalTime(undefined);
+      }, 3000);
+    }
+  }, [messages]);
 
   return (
     <div className="flex h-full m-3 space-x-3">
@@ -156,7 +170,7 @@ export default function Home() {
             {messages &&
               messages.map((message) => (
                 <Marker
-                  key={message.Node}
+                  key={`${message.Time.toString()}-${message.HopCount.toString()}`}
                   coordinates={GetNodeLocation(message)}
                 >
                   <circle r="5" className="ping-1"></circle>
@@ -164,6 +178,11 @@ export default function Home() {
                 </Marker>
               ))}
           </ComposableMap>
+          {totalTime && (
+            <div className="absolute bottom-10 left-1/3 bg-gray-800 text-white p-2 rounded-lg">
+              <p className="text-xl">Total time: {totalTime} milliseconds</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
