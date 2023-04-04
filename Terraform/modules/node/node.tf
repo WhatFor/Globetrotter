@@ -64,14 +64,14 @@ data "azurerm_storage_account_blob_container_sas" "storage_account_blob_containe
 }
 
 # AI
-resource "azurerm_application_insights" "globe-node-ai" {
-  name                 = "gl-node-${var.node_location}-ai"
-  location             = var.azure_region
-  resource_group_name  = azurerm_resource_group.globe-node-rg.name
-  application_type     = "web"
-  retention_in_days    = 30
-  daily_data_cap_in_gb = 1
-}
+# resource "azurerm_application_insights" "globe-node-ai" {
+#   name                 = "gl-node-${var.node_location}-ai"
+#   location             = var.azure_region
+#   resource_group_name  = azurerm_resource_group.globe-node-rg.name
+#   application_type     = "web"
+#   retention_in_days    = 30
+#   daily_data_cap_in_gb = 1
+# }
 
 # Function
 resource "azurerm_linux_function_app" "globe-node-func" {
@@ -82,13 +82,13 @@ resource "azurerm_linux_function_app" "globe-node-func" {
   storage_account_name       = azurerm_storage_account.globe-node-sa.name
   storage_account_access_key = azurerm_storage_account.globe-node-sa.primary_access_key
   app_settings = {
-    "AzureSignalRConnectionString"   = var.signalR_connectionString
-    "NextNodeAddress"                = var.next_node_address
-    "SelfIdentifier"                 = var.node_location
-    "MaxHopCount"                    = var.max_hop_count
-    "DelayMs"                        = var.delay_ms
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.globe-node-ai.instrumentation_key,
-    "WEBSITE_RUN_FROM_PACKAGE"       = "https://${azurerm_storage_account.globe-node-sa.name}.blob.core.windows.net/${azurerm_storage_container.globe-node-storage-container.name}/${azurerm_storage_blob.node_functionstorage_blob.name}${data.azurerm_storage_account_blob_container_sas.storage_account_blob_container_sas.sas}",
+    "AzureSignalRConnectionString" = var.signalR_connectionString
+    "NextNodeAddress"              = var.next_node_address
+    "SelfIdentifier"               = var.node_location
+    "MaxHopCount"                  = var.max_hop_count
+    "DelayMs"                      = var.delay_ms
+    # "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.globe-node-ai.instrumentation_key,
+    "WEBSITE_RUN_FROM_PACKAGE" = "https://${azurerm_storage_account.globe-node-sa.name}.blob.core.windows.net/${azurerm_storage_container.globe-node-storage-container.name}/${azurerm_storage_blob.node_functionstorage_blob.name}${data.azurerm_storage_account_blob_container_sas.storage_account_blob_container_sas.sas}",
   }
   site_config {
     always_on       = false

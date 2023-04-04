@@ -1,68 +1,164 @@
 import { useEffect, useState } from "react";
+import { HopMessage } from "~/@types/HopMessage";
 import { useSignalR } from "~/context/useSignalR";
 
-interface HopMessage {
-  Node: string;
-  Time: string;
-  HopCount: number;
-}
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from "react-simple-maps";
 
-const GetLocationUrl = (location: string) =>
-  `https://gl-node-${location}-func.azurewebsites.net/api/Globetrotter`;
+const geoUrl =
+  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json";
+
+const GetLocationUrl = () =>
+  `https://gl-node-uk-func.azurewebsites.net/api/Globetrotter`;
+
+const GetNodeLocation = (message: HopMessage): [number, number] => {
+  const loc = Locations.find((l) => l.id === message.Node);
+  return loc ? [loc.pos.long, loc.pos.lat] : [0, 0];
+};
 
 const Locations = [
-  { id: "india", name: "India" },
-  { id: "southafrica", name: "South Africa" },
+  {
+    id: "southafrica",
+    name: "South Africa",
+    pos: { lat: -26.204444, long: 28.045556 },
+  },
+  {
+    id: "india",
+    name: "India Central",
+    pos: { lat: 18.520278, long: 73.856667 },
+  },
+  {
+    id: "southasia",
+    name: "SE Asia",
+    pos: { lat: 1.283333, long: 103.833333 },
+  },
+  {
+    id: "asia",
+    name: "East Asia",
+    pos: { lat: 22.3, long: 114.2 },
+  },
+  {
+    id: "japan",
+    name: "Japan",
+    pos: { lat: 35.683333, long: 139.766667 },
+  },
+  {
+    id: "westus",
+    name: "West US",
+    pos: { lat: 37.7775, long: -122.416389 },
+  },
+  {
+    id: "southus",
+    name: "South US",
+    pos: { lat: 29.762778, long: -95.383056 },
+  },
+  {
+    id: "canada",
+    name: "East Canada",
+    pos: { lat: 46.813889, long: -71.208056 },
+  },
+  {
+    id: "uk",
+    name: "UK",
+    pos: { lat: 51.507222, long: -0.1275 },
+  },
 ];
 
 export default function Home() {
-  const [messages, setMesages] = useState<HopMessage[]>([]);
+  const [latestMessage, setLatestMessage] = useState<HopMessage>();
   const signalRConnection = useSignalR();
 
   useEffect(() => {
     if (signalRConnection.connection) {
       signalRConnection.connection.on("newMessage", (message) => {
-        console.log("message received", message);
-        setMesages((messages) => [...messages, message]);
+        setLatestMessage(message);
       });
     }
   }, []);
 
   return (
-    <div>
-      <div className="fixed px-12 py-3 right-4 top-4 bottom-4 bg-gray-800 shadow rounded-lg text-white space-y-8">
-        <h1 className="text-xl">Locations</h1>
-        <div className="flex flex-col space-y-3">
-          {Locations.map((loc) => (
-            <div key={loc.id}>
-              <button
-                className="bg-gray-700 rounded-lg px-5 py-2 w-full"
-                onClick={() => fetch(GetLocationUrl(loc.id))}
-              >
-                {loc.name}
-              </button>
+    <div className="flex h-full m-3 space-x-3">
+      <div className="flex flex-col border border-gray-600 justify-between w-64 px-3 py-3 right-3 top-3 bottom-3 bg-gray-800 shadow-lg rounded-lg text-white space-y-5">
+        <div className="flex flex-col h-full space-y-4">
+          <div className="flex h-full flex-col justify-between">
+            <div className="flex flex-col space-y-3 text-gray-200">
+              <h1 className="text-2xl font-bold">Globetrotter</h1>
+              <p className="text-sm italic">
+                A race around the world via Azure Functions.
+              </p>
+              <hr className="border-gray-500" />
+              <h3 className="text-xl font-bold">Why is this interesting?</h3>
+              <p className="text-sm">
+                Through deployments controlled via{" "}
+                <a
+                  href="https://www.terraform.io/"
+                  className="underline text-green-400"
+                >
+                  Terraform
+                </a>
+                , deployment of Azure Functions running the{" "}
+                <a
+                  href="https://github.com/WhatFor/Globetrotter/blob/main/Node/Globetrotter.cs"
+                  className="underline text-green-400"
+                >
+                  same code
+                </a>{" "}
+                can be shipped to multiple regions around the world.
+              </p>
+              <p className="text-sm">
+                Each deployed node knows about the next node in the chain, and
+                calls on to it when invoked.
+              </p>
+              <p className="text-sm">
+                As each node is hit, it makes a call to Azure SignalR Service to
+                notify you, the user!
+              </p>
+              <p className="text-sm">
+                What you're seeing here is almost real-time data as the traffic
+                navigates the globe. Cool!
+              </p>
+              <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
-          ))}
+            <button
+              className="bg-green-300 text-gray-600 font-bold hover:bg-green-400 transition rounded-lg px-12 py-2 w-full"
+              onClick={() => fetch(GetLocationUrl())}
+            >
+              Start
+            </button>
+          </div>
         </div>
-        <button
-          onClick={() => setMesages([])}
-          className="text-white bg-gray-800 rounded w-full px-5 py-2"
-        >
-          Clear
-        </button>
       </div>
-      <div className="bg-red-100">
-        {messages.map((message, index) => {
-          return (
-            <div key={index}>
-              <div className="font-bold text-red-800">
-                Hop #{message.HopCount}
-              </div>
-              <div>{message.Node}</div>
-              <div>{message.Time}</div>
-            </div>
-          );
-        })}
+      <div className="flex flex-col space-y-3 w-full">
+        <div className="relative w-full">
+          <ComposableMap>
+            <Geographies geography={geoUrl}>
+              {({ geographies }) =>
+                geographies.map((geo) => (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill="#333333"
+                    stroke="#666666"
+                  />
+                ))
+              }
+            </Geographies>
+            {latestMessage && (
+              <Marker coordinates={GetNodeLocation(latestMessage)}>
+                <circle r={6} fill="#339" stroke="#66e" strokeWidth={1} />
+                <text
+                  textAnchor="middle"
+                  y={0}
+                  style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
+                ></text>
+              </Marker>
+            )}
+          </ComposableMap>
+        </div>
       </div>
     </div>
   );
