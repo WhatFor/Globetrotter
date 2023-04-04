@@ -118,8 +118,8 @@ export default function Home() {
                 notify you, the user!
               </p>
               <p className="text-sm">
-                What you're seeing here is almost real-time data as the traffic
-                navigates the globe. Cool!
+                What you&apos;re seeing here is almost real-time data as the
+                traffic navigates the globe. Cool!
               </p>
               <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
