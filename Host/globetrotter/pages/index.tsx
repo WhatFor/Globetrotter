@@ -69,17 +69,17 @@ const Locations = [
 ];
 
 export default function Home() {
-  const [latestMessage, setLatestMessage] = useState<HopMessage>();
+  const [messages, setMessages] = useState<HopMessage[]>([]);
   const signalRConnection = useSignalR();
 
   useEffect(() => {
     if (signalRConnection.connection) {
       signalRConnection.connection.on("newMessage", (message) => {
-        setLatestMessage(message);
+        setMessages((m) => [...m, message]);
 
         if (message.HopCount === 10) {
           setTimeout(() => {
-            setLatestMessage(undefined);
+            setMessages([]);
           }, 1000);
         }
       });
@@ -125,7 +125,7 @@ export default function Home() {
               </p>
               <p className="text-sm">
                 What you&apos;re seeing here is almost real-time data as the
-                traffic navigates the globe. Cool!
+                traffic navigates the globe.
               </p>
               <h4 className="text-lg font-bold">Click Start!</h4>
             </div>
@@ -153,12 +153,16 @@ export default function Home() {
                 ))
               }
             </Geographies>
-            {latestMessage && (
-              <Marker coordinates={GetNodeLocation(latestMessage)}>
-                <circle r="5" className="ping-1"></circle>
-                <circle r="5" className="ping-2"></circle>
-              </Marker>
-            )}
+            {messages &&
+              messages.map((message) => (
+                <Marker
+                  key={message.Node}
+                  coordinates={GetNodeLocation(message)}
+                >
+                  <circle r="5" className="ping-1"></circle>
+                  <circle r="5" className="ping-2"></circle>
+                </Marker>
+              ))}
           </ComposableMap>
         </div>
       </div>

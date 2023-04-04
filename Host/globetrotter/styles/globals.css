@@ -29,12 +29,14 @@ body {
 
 .ping-1 {
   fill: rgb(74 222 128);
-  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
   animation-delay: 0ms;
+  animation-iteration-count: 1;
 }
 
 .ping-2 {
   fill: rgb(34 197 94);
-  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-  animation-delay: 250ms;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1);
+  animation-delay: 300ms;
+  animation-iteration-count: 1;
 }
