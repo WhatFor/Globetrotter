@@ -1,5 +1,3 @@
-# Globetrotter
-
-See: https://globetrotter-kappa.vercel.app
+# Globetrotter: Retired
 
 Check me out at https://whatfor.dev
